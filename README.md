@@ -76,7 +76,7 @@ Aplicación Android que permite registrar partes policiales desde un dispositivo
 
 Para insertar o actualizar datos se utiliza `ContentValues`:
 
-```java
+## Java
 ContentValues values = new ContentValues();
 values.put("nombres", parte.getNombres());
 values.put("rut", parte.getRut());
