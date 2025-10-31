@@ -1,0 +1,26 @@
+<resources>
+    <string-array name="tipos_vehiculo">
+        <item>Auto</item>
+        <item>Camioneta</item>
+        <item>Moto</item>
+        <item>Bus</item>
+    </string-array>
+
+    <string-array name="marcas_vehiculo">
+        <item>Toyota</item>
+        <item>Hyundai</item>
+        <item>Chevrolet</item>
+    </string-array>
+
+    <string-array name="causales_infraccion">
+        <item>Exceso de velocidad</item>
+        <item>Sin cinturón</item>
+        <item>Uso de celular</item>
+    </string-array>
+
+    <string-array name="departamentos">
+        <item>Tránsito</item>
+        <item>Seguridad Pública</item>
+        <item>Fiscalización</item>
+    </string-array>
+</resources>

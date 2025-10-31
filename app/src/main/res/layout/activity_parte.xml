@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Título principal -->
+        <TextView
+            android:id="@+id/tituloParte"
+            android:text="Hacer Parte"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Datos del infractor -->
+        <EditText
+            android:id="@+id/nombres"
+            android:hint="Nombres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/apellidos"
+            android:hint="Apellidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/rut"
+            android:hint="RUT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edad"
+            android:hint="Edad"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Tipo de vehículo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <Spinner
+            android:id="@+id/tipoAuto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Marca del vehículo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marca del vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <Spinner
+            android:id="@+id/marca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Modelo del vehículo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modelo del vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/modelo"
+            android:hint="Ej: Corolla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Patente del vehículo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Patente del vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/patente"
+            android:hint="Ej: ABCD12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Causal del parte -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Causal de la infracción"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <!-- Seleccion de la gravedad de la multa -->
+        <RadioGroup
+            android:id="@+id/grupoGravedad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/rbGravisima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gravísima" />
+
+            <RadioButton
+                android:id="@+id/rbGrave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grave" />
+
+            <RadioButton
+                android:id="@+id/rbLeve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leve" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/causal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Foto del vehículo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fotografía del vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <ImageView
+            android:id="@+id/fotoVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="#CCC" />
+
+        <Button
+            android:id="@+id/btnFoto"
+            android:text="Tomar Foto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Datos del funcionario -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Funcionario"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/nombreFuncionario"
+            android:hint="Ej: Juan Pérez"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Número de Placa"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/numeroPlaca"
+            android:hint="Ej: 123456"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Departamento"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <Spinner
+            android:id="@+id/departamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lugar de pago de la multa"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/lugarPago"
+            android:hint="Ej: Tesorería Municipal de Ovalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Botón para guardar -->
+        <Button
+            android:id="@+id/btnGuardar"
+            android:text="Guardar Parte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Título del menú -->
+    <TextView
+        android:id="@+id/tituloMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Menú Principal"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp" />
+
+    <!-- Botón para hacer parte -->
+    <Button
+        android:id="@+id/btnHacerParte"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Hacer Parte"
+        app:layout_constraintTop_toBottomOf="@id/tituloMenu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="48dp" />
+
+    <!-- Botón para editar parte -->
+    <Button
+        android:id="@+id/btnEditarParte"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Editar Parte"
+        app:layout_constraintTop_toBottomOf="@id/btnHacerParte"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="48dp" />
+
+    <!-- Botón para ver historial -->
+    <Button
+        android:id="@+id/btnHistorial"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Historial"
+        app:layout_constraintTop_toBottomOf="@id/btnEditarParte"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="48dp" />
+
+    <!-- ✅ Botón para eliminar parte justo debajo de historial -->
+    <Button
+        android:id="@+id/btnEliminarParte"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Eliminar Parte"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnHistorial"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="48dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
