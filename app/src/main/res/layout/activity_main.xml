@@ -7,18 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Título del menú -->
-    <TextView
-        android:id="@+id/tituloMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Menú Principal"
-        android:textSize="24sp"
-        android:textStyle="bold"
+    <!-- Toolbar con estilo sobrio -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#2C2C2C"
+        android:title="AplicacionPartes"
+        android:titleTextColor="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="48dp" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <!-- Botón para hacer parte -->
     <Button
@@ -26,7 +26,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Hacer Parte"
-        app:layout_constraintTop_toBottomOf="@id/tituloMenu"
+        android:background="@drawable/btn_formal"
+        android:textColor="#333333"
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"
@@ -38,6 +40,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Editar Parte"
+        android:background="@drawable/btn_formal"
+        android:textColor="#333333"
         app:layout_constraintTop_toBottomOf="@id/btnHacerParte"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,24 +54,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Historial"
+        android:background="@drawable/btn_formal"
+        android:textColor="#333333"
         app:layout_constraintTop_toBottomOf="@id/btnEditarParte"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="48dp" />
 
-    <!-- ✅ Botón para eliminar parte justo debajo de historial -->
+    <!-- Botón para eliminar parte -->
     <Button
         android:id="@+id/btnEliminarParte"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Eliminar Parte"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:textColor="@android:color/white"
+        android:background="@drawable/btn_formal"
+        android:textColor="#333333"
         app:layout_constraintTop_toBottomOf="@id/btnHistorial"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="48dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

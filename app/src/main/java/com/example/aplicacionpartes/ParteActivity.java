@@ -112,20 +112,44 @@ public class ParteActivity extends AppCompatActivity {
 
             if (checkedId == R.id.rbGravisima) {
                 causalesFiltradas = new String[]{
-                        "Participar en carreras clandestinas",
-                        "Conducir en condiciones físicas deficientes",
-                        "No respetar luz roja del semáforo"
+                        "Conducir bajo los efectos del alcohol o drogas",
+                        "Participar en carreras clandestinas (piques)",
+                        "No respetar luz roja del semáforo",
+                        "Conducir sin licencia o con licencia suspendida",
+                        "No detenerse ante cruce ferroviario",
+                        "Conducir en sentido contrario",
+                        "No respetar señal de 'Pare' o 'Ceda el paso'",
+                        "No detenerse ante un vehículo escolar detenido",
+                        "Conducir a exceso de velocidad sobre 60 km/h del límite permitido"
                 };
             } else if (checkedId == R.id.rbGrave) {
                 causalesFiltradas = new String[]{
-                        "No respetar disco Pare", "Conducir sin licencia", "Vehículo sin placa patente",
-                        "Exceso de velocidad (20-60 km/h)", "Circular por vías exclusivas de transporte público",
-                        "Desobedecer señales de Carabineros"
+                        "No respetar señal de tránsito reglamentaria",
+                        "Conducir sin portar licencia vigente",
+                        "Vehículo sin placa patente o con patente ilegible",
+                        "Exceso de velocidad entre 20 y 60 km/h sobre el límite",
+                        "Circular por vías exclusivas de transporte público",
+                        "Desobedecer instrucciones de Carabineros",
+                        "No usar cinturón de seguridad",
+                        "Transportar niños sin sistema de retención infantil",
+                        "No mantener distancia razonable con otro vehículo",
+                        "No respetar paso de peatones",
+                        "Virar en lugar prohibido",
+                        "No portar elementos obligatorios (extintor, triángulo, chaleco reflectante)"
                 };
             } else {
                 causalesFiltradas = new String[]{
-                        "Estacionar en doble fila", "No bajar luces en carretera", "Circular con neumáticos defectuosos",
-                        "No hacer señales antes de virar", "Estacionar a menos de 10 metros de la esquina"
+                        "Estacionar en doble fila",
+                        "No bajar luces en carretera",
+                        "Circular con neumáticos en mal estado",
+                        "No señalizar antes de virar o cambiar de pista",
+                        "Estacionar a menos de 10 metros de una esquina",
+                        "Usar bocina innecesariamente",
+                        "No portar licencia de conducir (pero tenerla vigente)",
+                        "Estacionar frente a grifos o salidas de vehículos",
+                        "Circular con vidrios polarizados sin autorización",
+                        "No mantener el vehículo limpio o con patente visible",
+                        "No respetar límites de velocidad menores (hasta 10 km/h sobre lo permitido)"
                 };
             }
 
