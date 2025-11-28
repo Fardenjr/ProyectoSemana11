@@ -1,16 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aplicacionpartes">
 
-    <!-- Permisos -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Declaración de hardware requerido -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
-    <!-- Declaración de consultas para Android 11+ -->
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -25,7 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplicacionPartes">
 
-        <!-- Actividades -->
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,15 +28,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ParteActivity" android:exported="false" />
-        <activity android:name=".EditarParteActivity" android:exported="false" />
-        <activity android:name=".HistorialActivity" android:exported="false" />
-        <activity android:name=".ListaEditableActivity" />
-        <activity android:name=".VistaParteActivity" />
-        <activity android:name=".EliminarParteActivity" />
-        <activity android:name=".ListaEliminableActivity" />
+        <activity android:name=".ParteActivity" android:exported="true" />
+        <activity android:name=".EditarParteActivity" android:exported="true" />
+        <activity android:name=".HistorialActivity" android:exported="true" />
+        <activity android:name=".ListaEditableActivity" android:exported="true" />
+        <activity android:name=".VistaParteActivity" android:exported="true" />
+        <activity android:name=".EliminarParteActivity" android:exported="true" />
+        <activity android:name=".ListaEliminableActivity" android:exported="true" />
+        <activity android:name=".LoginActivity" android:exported="true" />
+        <activity android:name=".PerfilActivity" android:exported="true" />
+        <activity android:name=".RegistroActivity" android:exported="true" />
+        <activity android:name=".ChatBotActivity" />
+        <activity android:name=".AdminActivity" />
 
-        <!-- FileProvider para la cámara -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

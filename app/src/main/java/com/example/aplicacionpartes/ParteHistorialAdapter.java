@@ -40,18 +40,21 @@ public class ParteHistorialAdapter extends RecyclerView.Adapter<ParteHistorialAd
         holder.txtNombre.setText(parte.nombres);
         holder.txtPatente.setText("Patente: " + parte.patente);
 
+        // Mostrar causal y gravedad (extra en historial)
+        holder.txtCausal.setText("Causal: " + parte.causal);
+        holder.txtGravedad.setText("Gravedad: " + parte.gravedad);
+
         // Mostrar imagen si existe
         if (parte.foto_path != null && !parte.foto_path.isEmpty()) {
             holder.imgFoto.setImageURI(Uri.parse(parte.foto_path));
         } else {
-            // Imagen por defecto si no hay foto (opcional)
             holder.imgFoto.setImageResource(android.R.drawable.ic_menu_report_image);
         }
 
         // Botón para ver parte en modo lectura
         holder.btnVer.setOnClickListener(v -> {
             Intent intent = new Intent(context, VistaParteActivity.class);
-            intent.putExtra("parteId", parte.id);
+            intent.putExtra("parteId", parte.id); // id es String en Firebase
             context.startActivity(intent);
         });
     }
@@ -63,7 +66,7 @@ public class ParteHistorialAdapter extends RecyclerView.Adapter<ParteHistorialAd
 
     public static class ParteViewHolder extends RecyclerView.ViewHolder {
         ImageView imgFoto;
-        TextView txtNombre, txtPatente;
+        TextView txtNombre, txtPatente, txtCausal, txtGravedad;
         Button btnVer;
 
         public ParteViewHolder(@NonNull View itemView) {
@@ -71,6 +74,8 @@ public class ParteHistorialAdapter extends RecyclerView.Adapter<ParteHistorialAd
             imgFoto = itemView.findViewById(R.id.imgFotoHistorial);
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtPatente = itemView.findViewById(R.id.txtPatente);
+            txtCausal = itemView.findViewById(R.id.txtCausalHistorial);
+            txtGravedad = itemView.findViewById(R.id.txtGravedadHistorial);
             btnVer = itemView.findViewById(R.id.btnVerParte);
         }
     }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tituloParte"
+            android:text="Vista del Parte"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Datos del infractor -->
+        <TextView android:id="@+id/txtNombres" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtApellidos" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtRut" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtEdad" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <!-- Vehículo -->
+        <TextView android:id="@+id/txtTipoAuto" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtMarca" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtModelo" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtPatente" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <!-- Infracción -->
+        <TextView android:id="@+id/txtCausal" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <!-- Gravedad -->
+        <TextView
+            android:text="Gravedad:"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RadioGroup
+            android:id="@+id/grupoGravedad"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rbGravisima"
+                android:text="Gravísima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/rbGrave"
+                android:text="Grave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/rbLeve"
+                android:text="Leve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
+        <!-- Foto -->
+        <TextView
+            android:text="Fotografía del vehículo"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/fotoVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="#CCC" />
+
+        <!-- Funcionario -->
+        <TextView android:id="@+id/txtNombreFuncionario" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtNumeroPlaca" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtDepartamento" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/txtLugarPago" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

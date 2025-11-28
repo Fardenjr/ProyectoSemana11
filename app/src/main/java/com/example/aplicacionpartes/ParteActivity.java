@@ -1,19 +1,10 @@
 package com.example.aplicacionpartes;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.*;
 import android.content.pm.PackageManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +16,7 @@ public class ParteActivity extends AppCompatActivity {
 
     // Campos del formulario
     EditText nombres, apellidos, rut, edad, modelo, patente;
-    EditText nombreFuncionario, numeroPlaca, lugarPago;
+    EditText nombreFuncionario, numeroPlaca, lugarPago, autorId; // ✅ autorId agregado
     Spinner tipoAuto, marca, causal, departamento;
     RadioGroup grupoGravedad;
     RadioButton rbGravisima, rbGrave, rbLeve;
@@ -35,10 +26,9 @@ public class ParteActivity extends AppCompatActivity {
     // Ruta de la foto tomada
     String fotoPath = "";
 
-    // Base de datos
-    DBHelper dbHelper;
+    // Firebase
+    FirebaseHelper firebaseHelper;
 
-    // Código de solicitud de cámara
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
@@ -60,6 +50,7 @@ public class ParteActivity extends AppCompatActivity {
         nombreFuncionario = findViewById(R.id.nombreFuncionario);
         numeroPlaca = findViewById(R.id.numeroPlaca);
         lugarPago = findViewById(R.id.lugarPago);
+        autorId = findViewById(R.id.autorId); // ✅ Enlace agregado
         grupoGravedad = findViewById(R.id.grupoGravedad);
         rbGravisima = findViewById(R.id.rbGravisima);
         rbGrave = findViewById(R.id.rbGrave);
@@ -68,48 +59,26 @@ public class ParteActivity extends AppCompatActivity {
         btnGuardar = findViewById(R.id.btnGuardar);
         btnFoto = findViewById(R.id.btnFoto);
 
-        // Inicializar base de datos
-        dbHelper = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper();
 
-        // Cargar opciones en los spinners y configurar filtros
         cargarSpinners();
 
-        // Configurar botón para tomar foto
         btnFoto.setOnClickListener(v -> abrirCamara());
-
-        // Configurar botón para guardar parte
         btnGuardar.setOnClickListener(v -> guardarParte());
     }
 
-    // Metodo para cargar opciones en los spinners y configurar el filtro de causales
     private void cargarSpinners() {
-        // Tipos de vehículo
-        String[] tipos = {"SUV", "Sedán", "Camioneta", "Hatchback"};
-        tipoAuto.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, tipos));
+        tipoAuto.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"SUV", "Sedán", "Camioneta", "Hatchback"}));
 
-        // Marcas de vehículo
-        String[] marcas = {
-                "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", "Bugatti", "Buick",
-                "BYD", "Cadillac", "Changan", "Chery", "Chevrolet", "Chrysler", "Citroën", "Cupra",
-                "Dacia", "Daewoo", "Daihatsu", "Dodge", "DS Automobiles", "Ferrari", "Fiat", "Ford",
-                "Geely", "Genesis", "GMC", "Great Wall", "Haval", "Honda", "Hummer", "Hyundai",
-                "Infiniti", "Isuzu", "Iveco", "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
-                "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Lucid", "Mahindra", "Maserati",
-                "Mazda", "McLaren", "Mercedes-Benz", "MG", "Mini", "Mitsubishi", "Nissan", "Opel",
-                "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "RAM", "Renault", "Rivian",
-                "Rolls-Royce", "Rover", "Saab", "Seat", "Skoda", "Smart", "SsangYong", "Subaru",
-                "Suzuki", "Tata", "Tesla", "Toyota", "Volkswagen", "Volvo", "Zotye"
-        };
-        marca.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, marcas));
+        marca.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Toyota", "Hyundai", "Chevrolet", "Kia", "Nissan", "Volkswagen", "Ford", "Honda"}));
 
-        // Departamentos emisores
-        String[] opcionesDepartamento = {"Carabinero", "Dirección de Tránsito"};
-        departamento.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, opcionesDepartamento));
+        departamento.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Carabinero", "Dirección de Tránsito"}));
 
-        // Configurar filtro de causales según gravedad seleccionada
         grupoGravedad.setOnCheckedChangeListener((group, checkedId) -> {
             String[] causalesFiltradas;
-
             if (checkedId == R.id.rbGravisima) {
                 causalesFiltradas = new String[]{
                         "Conducir bajo los efectos del alcohol o drogas",
@@ -153,15 +122,13 @@ public class ParteActivity extends AppCompatActivity {
                 };
             }
 
-            ArrayAdapter<String> adapterCausal = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, causalesFiltradas);
-            causal.setAdapter(adapterCausal);
+            causal.setAdapter(new ArrayAdapter<>(ParteActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, causalesFiltradas));
         });
 
-        // Selección inicial por defecto
         rbGrave.setChecked(true);
     }
 
-    // Metodo para abrir la cámara
     private void abrirCamara() {
         if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.CAMERA}, 100);
@@ -170,7 +137,6 @@ public class ParteActivity extends AppCompatActivity {
         }
     }
 
-    // Metodo para lanzar el intent de captura
     private void lanzarIntentCamara() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -181,7 +147,6 @@ public class ParteActivity extends AppCompatActivity {
         }
     }
 
-    // Metodo para crear archivo de imagen
     private File crearArchivoImagen() {
         String nombreArchivo = "FOTO_" + System.currentTimeMillis();
         File directorio = getFilesDir();
@@ -190,7 +155,6 @@ public class ParteActivity extends AppCompatActivity {
         return imagen;
     }
 
-    // Metodo que se ejecuta al volver de la cámara
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -199,41 +163,42 @@ public class ParteActivity extends AppCompatActivity {
         }
     }
 
-    // Metodo para guardar los datos del parte en la base de datos
     private void guardarParte() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        Parte parte = new Parte();
 
-        try {
-            values.put("nombres", nombres.getText().toString());
-            values.put("apellidos", apellidos.getText().toString());
-            values.put("rut", rut.getText().toString());
-            values.put("edad", Integer.parseInt(edad.getText().toString()));
-            values.put("tipo_auto", tipoAuto.getSelectedItem().toString());
-            values.put("marca", marca.getSelectedItem().toString());
-            values.put("modelo", modelo.getText().toString());
-            values.put("patente", patente.getText().toString());
-            values.put("causal", causal.getSelectedItem().toString());
-            values.put("foto_path", fotoPath);
-            values.put("nombre_funcionario", nombreFuncionario.getText().toString());
-            values.put("numero_placa", numeroPlaca.getText().toString());
-            values.put("departamento", departamento.getSelectedItem().toString());
-            values.put("lugar_pago", lugarPago.getText().toString());
+        parte.nombres = nombres.getText().toString();
+        parte.apellidos = apellidos.getText().toString();
+        parte.rut = rut.getText().toString();
+        parte.edad = Integer.parseInt(edad.getText().toString());
+        parte.tipo_auto = tipoAuto.getSelectedItem().toString();
+        parte.marca = marca.getSelectedItem().toString();
+        parte.modelo = modelo.getText().toString();
+        parte.patente = patente.getText().toString();
+        parte.causal = causal.getSelectedItem().toString();
+        parte.foto_path = fotoPath;
+        parte.nombre_funcionario = nombreFuncionario.getText().toString();
+        parte.numero_placa = numeroPlaca.getText().toString();
+        parte.departamento = departamento.getSelectedItem().toString();
+        parte.lugar_pago = lugarPago.getText().toString();
 
-            // Insertar los datos en la tabla 'partes'
-            long resultado = db.insert("partes", null, values);
+        int gravedadId = grupoGravedad.getCheckedRadioButtonId();
+        if (gravedadId == R.id.rbGravisima) parte.gravedad = "Gravísima";
+        else if (gravedadId == R.id.rbGrave) parte.gravedad = "Grave";
+        else if (gravedadId == R.id.rbLeve) parte.gravedad = "Leve";
 
-            // Mostrar mensaje de éxito o error
-            if (resultado != -1) {
-                Toast.makeText(this, "Parte guardado correctamente", Toast.LENGTH_SHORT).show();
-                finish(); // Cierra la actividad y vuelve al menú principal
-            } else {
-                Toast.makeText(this, "Error al guardar parte", Toast.LENGTH_SHORT).show();
+        parte.autorId = autorId.getText().toString().trim(); // ✅ Captura manual del autor
+
+        firebaseHelper.insertarParte(parte, new FirebaseHelper.OnResultadoListener() {
+            @Override
+            public void onExito() {
+                Toast.makeText(ParteActivity.this, "Parte guardado correctamente", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
-        } catch (Exception e) {
-            // Mostrar mensaje de error si ocurre una excepción
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ParteActivity.this, "Error al guardar parte: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

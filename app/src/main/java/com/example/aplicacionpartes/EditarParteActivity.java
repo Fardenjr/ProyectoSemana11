@@ -1,43 +1,44 @@
 package com.example.aplicacionpartes;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class EditarParteActivity extends AppCompatActivity {
 
-    // Campos del formulario
     EditText nombres, apellidos, rut, edad, modelo, patente;
     Spinner tipoAuto, marca, causal;
     ImageView fotoVehiculo;
     Button btnActualizar, btnFoto;
 
-    // Ruta de la foto y ID del parte a editar
     String fotoPath = "";
-    int parteId;
+    String parteId;
 
-    // Acceso a la base de datos
-    DBHelper dbHelper;
+    FirebaseHelper firebaseHelper;
     static final int REQUEST_IMAGE_CAPTURE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Reutiliza el layout de creación de parte
         setContentView(R.layout.activity_parte);
 
-        // Enlaza los elementos visuales del layout
+        // Enlazar vistas
         nombres = findViewById(R.id.nombres);
         apellidos = findViewById(R.id.apellidos);
         rut = findViewById(R.id.rut);
@@ -48,99 +49,67 @@ public class EditarParteActivity extends AppCompatActivity {
         marca = findViewById(R.id.marca);
         causal = findViewById(R.id.causal);
         fotoVehiculo = findViewById(R.id.fotoVehiculo);
-        btnActualizar = findViewById(R.id.btnGuardar); // Reutiliza el botón de guardar
+        btnActualizar = findViewById(R.id.btnGuardar);
         btnFoto = findViewById(R.id.btnFoto);
 
-        // Cambia el texto del botón para indicar que es una edición
         btnActualizar.setText("Actualizar Parte");
 
-        // Inicializa la base de datos
-        dbHelper = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper();
 
-        // Carga las opciones en los spinners
-        cargarSpinners();
-
-        // Obtiene el ID del parte desde el intent
-        parteId = getIntent().getIntExtra("parteId", -1);
-        if (parteId == -1) {
+        parteId = getIntent().getStringExtra("parteId");
+        if (parteId == null) {
             Toast.makeText(this, "ID de parte no recibido", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Carga los datos del parte desde la base
+        cargarSpinners();
         cargarDatosParte(parteId);
 
-        // Configura los botones
         btnFoto.setOnClickListener(v -> abrirCamara());
         btnActualizar.setOnClickListener(v -> actualizarParte());
     }
 
-    // Carga las opciones en los spinners y asigna adaptadores
     private void cargarSpinners() {
         String[] tipos = {"SUV", "Sedán", "Camioneta", "Hatchback"};
-        String[] marcas = {
-                "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", "Bugatti", "Buick",
-                "BYD", "Cadillac", "Changan", "Chery", "Chevrolet", "Chrysler", "Citroën", "Cupra",
-                "Dacia", "Daewoo", "Daihatsu", "Dodge", "DS Automobiles", "Ferrari", "Fiat", "Ford",
-                "Geely", "Genesis", "GMC", "Great Wall", "Haval", "Honda", "Hummer", "Hyundai",
-                "Infiniti", "Isuzu", "Iveco", "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
-                "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Lucid", "Mahindra", "Maserati",
-                "Mazda", "McLaren", "Mercedes-Benz", "MG", "Mini", "Mitsubishi", "Nissan", "Opel",
-                "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "RAM", "Renault", "Rivian",
-                "Rolls-Royce", "Rover", "Saab", "Seat", "Skoda", "Smart", "SsangYong", "Subaru",
-                "Suzuki", "Tata", "Tesla", "Toyota", "Volkswagen", "Volvo", "Zotye"
-        };
-        String[] causales = {
-                "No respetar disco Pare", "Conducir sin licencia", "Conducir usando el celular",
-                "No respetar luz roja del semáforo", "Vehículo sin placa patente", "Exceso de velocidad (20-60 km/h)",
-                "Conducir sin velocímetro", "Conducir sin espejo retrovisor", "Acceder a beneficios de transporte sin ser titular",
-                "Revisión técnica vencida o rechazada", "Licencia distinta a la requerida", "Sin permiso de circulación o SOAP",
-                "Conducir en condiciones físicas deficientes", "Adelantar en paso peatonal o berma", "Desobedecer señales de Carabineros",
-                "Circular contra el sentido del tránsito", "Estacionar en puentes, túneles o cruces", "Vehículo sin luces o frenos en mal estado",
-                "Circular con neumáticos defectuosos", "No bajar luces en carretera", "Usar elementos para evadir fiscalización",
-                "Estacionar en lugar exclusivo para discapacitados", "Estacionar en doble fila", "Cruzar vía férrea en lugar no autorizado",
-                "Exceso de carga o pasajeros", "Estacionar a menos de 10 metros de la esquina", "Conducir marcha atrás en cruce",
-                "No hacer señales antes de virar", "Conducir sin silenciador o escape en mal estado", "Negarse a transportar escolares",
-                "Arrojar objetos desde el vehículo", "No detenerse ante línea férrea", "Circular con puertas abiertas en locomoción colectiva",
-                "No respetar normas sobre transporte de pasajeros", "No respetar normas de pista de circulación",
-                "Obstrucción visual por carga o pasajeros", "Transitar sin TAG", "Circular por vías exclusivas de transporte público",
-                "Participar en carreras clandestinas", "No respetar indicaciones de Carabineros", "Circular en días de restricción vehicular"
-        };
+        String[] marcas = {"Toyota", "Hyundai", "Chevrolet", "Kia", "Nissan", "Volkswagen", "Ford", "Honda"};
+        String[] causales = {"Exceso de velocidad", "No respetar señal", "Conducir sin licencia"};
 
-        // Asignación de adaptadores a los spinners
         tipoAuto.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, tipos));
         marca.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, marcas));
         causal.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, causales));
     }
 
-    // Carga los datos del parte desde la base de datos
-    private void cargarDatosParte(int id) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM partes WHERE id = ?", new String[]{String.valueOf(id)});
-        if (cursor.moveToFirst()) {
-            nombres.setText(cursor.getString(cursor.getColumnIndexOrThrow("nombres")));
-            apellidos.setText(cursor.getString(cursor.getColumnIndexOrThrow("apellidos")));
-            rut.setText(cursor.getString(cursor.getColumnIndexOrThrow("rut")));
-            edad.setText(cursor.getString(cursor.getColumnIndexOrThrow("edad")));
-            modelo.setText(cursor.getString(cursor.getColumnIndexOrThrow("modelo")));
-            patente.setText(cursor.getString(cursor.getColumnIndexOrThrow("patente")));
-            fotoPath = cursor.getString(cursor.getColumnIndexOrThrow("foto_path"));
+    private void cargarDatosParte(String id) {
+        firebaseHelper.obtenerPartePorId(id, new FirebaseHelper.OnParteListener() {
+            @Override
+            public void onParteObtenido(Parte parte) {
+                if (parte == null) return;
 
-            // Carga la imagen si existe
-            if (fotoPath != null && !fotoPath.isEmpty()) {
-                fotoVehiculo.setImageURI(Uri.fromFile(new File(fotoPath)));
+                nombres.setText(parte.nombres);
+                apellidos.setText(parte.apellidos);
+                rut.setText(parte.rut);
+                edad.setText(String.valueOf(parte.edad));
+                modelo.setText(parte.modelo);
+                patente.setText(parte.patente);
+                fotoPath = parte.foto_path;
+
+                if (fotoPath != null && !fotoPath.isEmpty()) {
+                    fotoVehiculo.setImageURI(Uri.fromFile(new File(fotoPath)));
+                }
+
+                seleccionarSpinner(tipoAuto, parte.tipo_auto);
+                seleccionarSpinner(marca, parte.marca);
+                seleccionarSpinner(causal, parte.causal);
             }
 
-            // Selecciona los valores en los spinners
-            seleccionarSpinner(tipoAuto, cursor.getString(cursor.getColumnIndexOrThrow("tipo_auto")));
-            seleccionarSpinner(marca, cursor.getString(cursor.getColumnIndexOrThrow("marca")));
-            seleccionarSpinner(causal, cursor.getString(cursor.getColumnIndexOrThrow("causal")));
-        }
-        cursor.close();
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(EditarParteActivity.this, "Error al cargar parte", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // Selecciona el valor correcto en un spinner
     private void seleccionarSpinner(Spinner spinner, String valor) {
         ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
         if (adapter != null) {
@@ -151,7 +120,6 @@ public class EditarParteActivity extends AppCompatActivity {
         }
     }
 
-    // Abre la cámara para tomar una nueva foto
     private void abrirCamara() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -162,16 +130,14 @@ public class EditarParteActivity extends AppCompatActivity {
         }
     }
 
-    // Crea un archivo para guardar la imagen
     private File crearArchivoImagen() {
         String nombreArchivo = "FOTO_" + System.currentTimeMillis();
-        File directorio = getFilesDir(); // Guarda en almacenamiento interno privado
+        File directorio = getFilesDir();
         File imagen = new File(directorio, nombreArchivo + ".jpg");
-        fotoPath = imagen.getAbsolutePath(); // Guarda la ruta para mostrarla luego
+        fotoPath = imagen.getAbsolutePath();
         return imagen;
     }
 
-    // Muestra la imagen tomada en el ImageView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -180,33 +146,90 @@ public class EditarParteActivity extends AppCompatActivity {
         }
     }
 
-    // Actualiza el parte en la base de datos con los nuevos valores
     private void actualizarParte() {
-        try {
-            ContentValues values = new ContentValues();
-            values.put("nombres", nombres.getText().toString());
-            values.put("apellidos", apellidos.getText().toString());
-            values.put("rut", rut.getText().toString());
-            values.put("edad", Integer.parseInt(edad.getText().toString()));
-            values.put("tipo_auto", tipoAuto.getSelectedItem().toString());
-            values.put("marca", marca.getSelectedItem().toString());
-            values.put("modelo", modelo.getText().toString());
-            values.put("patente", patente.getText().toString());
-            values.put("causal", causal.getSelectedItem().toString());
-            values.put("foto_path", fotoPath);
+        Parte parte = new Parte();
 
-            boolean actualizado = dbHelper.updateParte(parteId, values);
-            if (actualizado) {
-                Toast.makeText(this, "Parte actualizado correctamente", Toast.LENGTH_SHORT).show();
+        parte.id = parteId;
+        parte.nombres = nombres.getText().toString();
+        parte.apellidos = apellidos.getText().toString();
+        parte.rut = rut.getText().toString();
+        parte.edad = Integer.parseInt(edad.getText().toString());
+        parte.tipo_auto = tipoAuto.getSelectedItem().toString();
+        parte.marca = marca.getSelectedItem().toString();
+        parte.modelo = modelo.getText().toString();
+        parte.patente = patente.getText().toString();
+        parte.causal = causal.getSelectedItem().toString();
+        parte.foto_path = fotoPath;
+
+        parte.autorId = firebaseHelper.getUsuarioActualId(); // opcional si quieres registrar quién lo editó
+
+        firebaseHelper.updateParte(parteId, parte, new FirebaseHelper.OnResultadoListener() {
+            @Override
+            public void onExito() {
+                Toast.makeText(EditarParteActivity.this, "Parte actualizado correctamente", Toast.LENGTH_SHORT).show();
                 finish();
-            } else {
-                Toast.makeText(this, "Error al actualizar parte", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(EditarParteActivity.this, "Error al actualizar parte", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
+    public static class ChatBotAdapter extends RecyclerView.Adapter<ChatBotAdapter.ViewHolder> {
 
+        private final List<Mensaje> mensajes;
+        private final Context context;
+
+        public ChatBotAdapter(List<Mensaje> mensajes, Context context) {
+            this.mensajes = mensajes;
+            this.context = context;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_mensaje, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Mensaje mensaje = mensajes.get(position);
+            holder.txtMensaje.setText(mensaje.texto);
+
+            String hora = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(mensaje.timestamp));
+            holder.txtHora.setText(hora);
+
+            if ("bot".equals(mensaje.autor)) {
+                holder.txtMensaje.setBackgroundResource(R.drawable.bg_mensaje_bot);
+                holder.txtMensaje.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                holder.container.setGravity(android.view.Gravity.START);
+                holder.labelAutor.setText("Bot");
+            } else {
+                holder.txtMensaje.setBackgroundResource(R.drawable.bg_mensaje_usuario);
+                holder.txtMensaje.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+                holder.container.setGravity(android.view.Gravity.END);
+                holder.labelAutor.setText("Tú");
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mensajes.size();
+        }
+
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView txtMensaje, txtHora, labelAutor;
+            LinearLayout container;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                txtMensaje = itemView.findViewById(R.id.txtMensaje);
+                txtHora = itemView.findViewById(R.id.txtHora);
+                labelAutor = itemView.findViewById(R.id.labelAutor);
+                container = itemView.findViewById(R.id.containerMensaje);
+            }
+        }
+    }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "488165414692",
+    "project_id": "aplicacionpartes-cb704",
+    "storage_bucket": "aplicacionpartes-cb704.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488165414692:android:a45f1874059512302d45b1",
+        "android_client_info": {
+          "package_name": "com.example.aplicacionpartes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbKadfaSiUNFXAROIln9mZKqxujZTANVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,4 +14,9 @@
         android:textColor="#000000"
         android:lineSpacingExtra="6dp"
         android:textStyle="normal" />
+    <TextView
+        android:id="@+id/txtAutorId"
+        android:text="Autor ID: "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </ScrollView>

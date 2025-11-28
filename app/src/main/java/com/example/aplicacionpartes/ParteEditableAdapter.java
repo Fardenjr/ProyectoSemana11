@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class ParteEditableAdapter extends RecyclerView.Adapter<ParteEditableAdapter.ParteViewHolder> {
@@ -20,21 +23,22 @@ public class ParteEditableAdapter extends RecyclerView.Adapter<ParteEditableAdap
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public ParteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ParteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_parte_editable, parent, false);
         return new ParteViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ParteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ParteViewHolder holder, int position) {
         Parte parte = lista.get(position);
         holder.txtNombre.setText(parte.nombres);
         holder.txtPatente.setText("Patente: " + parte.patente);
 
         holder.btnEditar.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditarParteActivity.class);
-            intent.putExtra("parteId", parte.id);
+            intent.putExtra("parteId", parte.id); // ahora id es String en Firebase
             context.startActivity(intent);
         });
     }

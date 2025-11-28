@@ -67,14 +67,41 @@
         android:id="@+id/btnEliminarParte"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_formal"
         android:text="Eliminar Parte"
+        android:textColor="#333333"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnHistorial" />
+
+    <!-- Botón para Chat Bot -->
+    <Button
+        android:id="@+id/btnChatBot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_formal"
+        android:text="Chat Bot"
+        android:textColor="#333333"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnEliminarParte" />
+
+    <!-- Botón para Ver Solicitudes (solo visible para administradores) -->
+    <Button
+        android:id="@+id/btnVerSolicitudes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ver Solicitudes"
         android:background="@drawable/btn_formal"
         android:textColor="#333333"
-        app:layout_constraintTop_toBottomOf="@id/btnHistorial"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="48dp" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnChatBot" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

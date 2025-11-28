@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class ParteEliminableAdapter extends RecyclerView.Adapter<ParteEliminableAdapter.ParteViewHolder> {
@@ -36,7 +38,7 @@ public class ParteEliminableAdapter extends RecyclerView.Adapter<ParteEliminable
 
         holder.btnEliminar.setOnClickListener(v -> {
             Intent intent = new Intent(context, EliminarParteActivity.class);
-            intent.putExtra("parteId", parte.id);
+            intent.putExtra("parteId", parte.id); // ahora id es String en Firebase
             context.startActivity(intent);
         });
     }

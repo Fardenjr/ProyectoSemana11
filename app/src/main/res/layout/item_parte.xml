@@ -1,38 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="4dp">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <!-- Datos principales -->
+    <TextView
+        android:id="@+id/txtNombre"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/txtNombre"
-            android:text="Nombre"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+    <TextView android:id="@+id/txtPatente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/txtPatente"
-            android:text="Patente"
-            android:textSize="14sp"
+    <TextView android:id="@+id/txtCausal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/txtGravedad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/txtAutorId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Botones de acción -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btnVerParte"
+            android:text="Ver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/btnVerParte"
-            android:text="Ver Parte"
-            android:layout_width="match_parent"
+            android:id="@+id/btnEditarParte"
+            android:text="Editar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/boton_pdf"
-            android:textColor="@android:color/white"/>
+            android:layout_marginStart="8dp"/>
+
+        <Button
+            android:id="@+id/btnEliminarParte"
+            android:text="Eliminar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>
