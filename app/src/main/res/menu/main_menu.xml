@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Opción para ver perfil -->
+    <!-- Perfil del usuario -->
     <item
         android:id="@+id/action_perfil"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/menu_title_details"
         app:showAsAction="ifRoom" />
 
-    <!-- Opción para cerrar sesión -->
+    <!-- Cerrar sesión -->
     <item
         android:id="@+id/action_logout"
         android:icon="@drawable/ic_baseline_logout_24"
@@ -16,16 +17,25 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <!-- Opción para abrir el Chat Bot -->
+    <!-- Chat Bot -->
     <item
         android:id="@+id/action_chatbot"
         android:title="Chat Bot"
+        android:icon="@drawable/ic_baseline_list_24"
         app:showAsAction="never" />
 
-    <!-- Nueva opción para ver solicitudes -->
+    <!-- Ver solicitudes (solo admin) -->
     <item
         android:id="@+id/action_ver_solicitudes"
         android:title="Ver Solicitudes"
         android:icon="@drawable/ic_baseline_list_24"
         app:showAsAction="ifRoom" />
+
+    <!-- 🆕 Chat en tiempo real -->
+    <item
+        android:id="@+id/action_chat"
+        android:title="Chat en tiempo real"
+        android:icon="@drawable/ic_chat"
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <!-- Título de solicitudes -->
+    <TextView
+        android:text="                Solicitudes de usuarios"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#37474F"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Lista de solicitudes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSolicitudes"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:padding="4dp"
+        android:scrollbars="vertical"/>
+
+    <!-- Título del chat -->
+    <TextView
+        android:text="                      Chat en tiempo real"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#37474F"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Lista de mensajes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerChatAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:padding="4dp"
+        android:scrollbars="vertical"/>
+
+    <!-- Campo de respuesta -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <EditText
+            android:id="@+id/inputRespuesta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Escribe una respuesta..."
+            android:inputType="textMultiLine"
+            android:minLines="1"
+            android:maxLines="4"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:elevation="1dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnResponder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Responder"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#388E3C"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:elevation="2dp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,12 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aplicacionpartes">
 
+    <!-- Permisos -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
+    <!-- Features -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
+    <!-- Queries para Intents (Android 11+) -->
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -21,13 +26,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplicacionPartes">
 
-        <activity android:name=".MainActivity" android:exported="true">
+        <!-- Actividad principal -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Actividades generales -->
         <activity android:name=".ParteActivity" android:exported="true" />
         <activity android:name=".EditarParteActivity" android:exported="true" />
         <activity android:name=".HistorialActivity" android:exported="true" />
@@ -38,9 +47,39 @@
         <activity android:name=".LoginActivity" android:exported="true" />
         <activity android:name=".PerfilActivity" android:exported="true" />
         <activity android:name=".RegistroActivity" android:exported="true" />
-        <activity android:name=".ChatBotActivity" />
-        <activity android:name=".AdminActivity" />
 
+        <!-- Actividades con chat (ajuste de teclado incluido) -->
+        <activity
+            android:name=".ChatBotActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".AdminActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".AdminChatActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".VerSolicitudActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".AdminSolicitudesActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- FileProvider para compartir imágenes -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

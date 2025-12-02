@@ -9,64 +9,64 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.ViewHolder> {
 
-    public interface OnSeleccionarListener {
-        void onSeleccionarUsuario(String uidUsuario);
+    // Interfaz para manejar acciones en cada solicitud
+    public interface OnSolicitudAccion {
+        void onVerSolicitud(Solicitud solicitud);
+        void onResponder(Solicitud solicitud);
     }
 
-    private final List<Solicitud> solicitudes;
+    private final List<Solicitud> lista;
     private final Context context;
-    private final OnSeleccionarListener listener;
+    private final OnSolicitudAccion listener;
 
-    public SolicitudAdapter(List<Solicitud> solicitudes, Context context, OnSeleccionarListener listener) {
-        this.solicitudes = solicitudes;
+    public SolicitudAdapter(List<Solicitud> lista, Context context, OnSolicitudAccion listener) {
+        this.lista = lista;
         this.context = context;
         this.listener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_solicitud, parent, false);
-        return new ViewHolder(view);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_solicitud, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Solicitud solicitud = solicitudes.get(position);
-        holder.txtMensaje.setText(solicitud.mensaje);
+    public void onBindViewHolder(ViewHolder h, int position) {
+        Solicitud s = lista.get(position);
 
-        String hora = DateFormat.getDateTimeInstance().format(new Date(solicitud.timestamp));
-        holder.txtHora.setText(hora);
+        // Mostrar nombre completo si existe
+        String nombreCompleto = (s.nombre != null ? s.nombre : "") + " " + (s.apellido != null ? s.apellido : "");
+        h.txtUsuario.setText(nombreCompleto.trim().isEmpty() ? "Usuario" : nombreCompleto.trim());
 
-        holder.txtUsuario.setText("UID: " + solicitud.uidUsuario);
+        // Mostrar UID o mensaje alternativo
+        h.txtEmail.setText(s.uidUsuario != null ? s.uidUsuario : "UID no disponible");
 
-        holder.btnSeleccionar.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onSeleccionarUsuario(solicitud.uidUsuario);
-            }
-        });
+        // Acciones de botones
+        h.btnVer.setOnClickListener(v -> listener.onVerSolicitud(s));
+        h.btnResponder.setOnClickListener(v -> listener.onResponder(s));
     }
 
     @Override
     public int getItemCount() {
-        return solicitudes.size();
+        return lista.size();
     }
 
+    // ViewHolder para cada item
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtMensaje, txtHora, txtUsuario;
-        Button btnSeleccionar;
+        TextView txtUsuario, txtEmail;
+        Button btnVer, btnResponder;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtMensaje = itemView.findViewById(R.id.txtMensajeSolicitud);
-            txtHora = itemView.findViewById(R.id.txtHoraSolicitud);
-            txtUsuario = itemView.findViewById(R.id.txtUsuarioSolicitud);
-            btnSeleccionar = itemView.findViewById(R.id.btnSeleccionar);
+            txtUsuario = itemView.findViewById(R.id.txtUsuario);
+            txtEmail = itemView.findViewById(R.id.txtEmail);
+            btnVer = itemView.findViewById(R.id.btnVerSolicitud);
+            btnResponder = itemView.findViewById(R.id.btnResponder);
         }
     }
 }

@@ -9,57 +9,90 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.hivemq.client.mqtt.MqttClient;
+import com.hivemq.client.mqtt.MqttClientState;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
+
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class AdminActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private SolicitudAdapter adapter;
-    private List<Solicitud> solicitudes;
+    private RecyclerView recyclerViewSolicitudes, recyclerViewChat;
+    private SolicitudAdapter solicitudAdapter;
+    private ChatAdapter chatAdapter;
 
-    private DatabaseReference adminRef;
+    private List<Solicitud> solicitudes;
+    private List<ChatMessage> mensajesChat;
 
     private EditText inputRespuesta;
     private Button btnResponder;
-    private String uidSeleccionado; // UID del usuario seleccionado
+
+    private String uidSeleccionado;
+    private String uidAdmin;
+
+    private DatabaseReference adminRef;
+    private Mqtt5AsyncClient mqttClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
+        setContentView(R.layout.activity_admin_chat);
 
-        // Inicializar RecyclerView y Adapter
-        recyclerView = findViewById(R.id.recyclerSolicitudes);
-        solicitudes = new ArrayList<>();
-        adapter = new SolicitudAdapter(solicitudes, this, uid -> {
-            // Guardamos el UID del usuario al que queremos responder
-            uidSeleccionado = uid;
-            Toast.makeText(this, "Usuario seleccionado: " + uid, Toast.LENGTH_SHORT).show();
-        });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        // Inicializar campo de respuesta y botón
+        recyclerViewSolicitudes = findViewById(R.id.recyclerSolicitudes);
+        recyclerViewChat = findViewById(R.id.recyclerChatAdmin);
         inputRespuesta = findViewById(R.id.inputRespuesta);
         btnResponder = findViewById(R.id.btnResponder);
 
-        // Referencia a solicitudes en Firebase
+        solicitudes = new ArrayList<>();
+        mensajesChat = new ArrayList<>();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Debes iniciar sesión como administrador", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        uidAdmin = user.getUid();
+
+        solicitudAdapter = new SolicitudAdapter(solicitudes, this, new SolicitudAdapter.OnSolicitudAccion() {
+            @Override
+            public void onVerSolicitud(Solicitud solicitud) {
+                uidSeleccionado = solicitud.uidUsuario;
+                Toast.makeText(AdminActivity.this, "Solicitud de: " + solicitud.nombre, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponder(Solicitud solicitud) {
+                uidSeleccionado = solicitud.uidUsuario;
+                Toast.makeText(AdminActivity.this, "Preparando respuesta para: " + solicitud.nombre, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        chatAdapter = new ChatAdapter(this, mensajesChat, uidAdmin);
+
+        recyclerViewSolicitudes.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewSolicitudes.setAdapter(solicitudAdapter);
+
+        recyclerViewChat.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewChat.setAdapter(chatAdapter);
+
         adminRef = FirebaseDatabase.getInstance().getReference("solicitudes_admin");
 
-        // Suscribir a cambios en solicitudes
         suscribirSolicitudes();
+        conectarMQTT();
 
-        // Acción del botón Responder
         btnResponder.setOnClickListener(v -> {
             if (uidSeleccionado == null) {
                 Toast.makeText(this, "Selecciona primero un usuario", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             String texto = inputRespuesta.getText().toString().trim();
             if (texto.isEmpty()) {
                 Toast.makeText(this, "Escribe una respuesta antes de enviar", Toast.LENGTH_SHORT).show();
@@ -67,6 +100,7 @@ public class AdminActivity extends AppCompatActivity {
             }
 
             enviarRespuesta(uidSeleccionado, texto);
+            publicarMensajeMQTT(uidSeleccionado, texto);
             inputRespuesta.setText("");
         });
     }
@@ -86,12 +120,12 @@ public class AdminActivity extends AppCompatActivity {
                         }
                     }
                 }
-                adapter.notifyDataSetChanged();
+                solicitudAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                Toast.makeText(AdminActivity.this, "Error cargando solicitudes: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminActivity.this, "Error cargando solicitudes", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -101,12 +135,62 @@ public class AdminActivity extends AppCompatActivity {
                 .getReference("respuestas_admin")
                 .child(uidUsuario);
 
-        Map<String, Object> respuesta = new HashMap<>();
-        respuesta.put("mensaje", textoRespuesta);
-        respuesta.put("timestamp", System.currentTimeMillis());
-        respuesta.put("autor", "admin");
-
+        RespuestaAdmin respuesta = new RespuestaAdmin(textoRespuesta, System.currentTimeMillis(), uidAdmin);
         respRef.push().setValue(respuesta);
-        Toast.makeText(this, "Respuesta enviada al usuario " + uidUsuario, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Respuesta guardada en Firebase", Toast.LENGTH_SHORT).show();
+    }
+
+    private void conectarMQTT() {
+        mqttClient = MqttClient.builder()
+                .useMqttVersion5()
+                .identifier("admin-" + UUID.randomUUID())
+                .serverHost("broker.hivemq.com")
+                .serverPort(1883)
+                .buildAsync();
+
+        mqttClient.connectWith().cleanStart(true).send()
+                .whenComplete((ack, throwable) -> {
+                    if (throwable == null) {
+                        mqttClient.subscribeWith()
+                                .topicFilter("chat/" + uidAdmin + "/+")
+                                .qos(MqttQos.AT_LEAST_ONCE)
+                                .callback(publish -> {
+                                    String topic = publish.getTopic().toString();
+                                    String[] partes = topic.split("/");
+                                    String uidRemitente = partes.length > 1 ? partes[1] : "desconocido";
+                                    String recibido = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
+
+                                    runOnUiThread(() -> {
+                                        mensajesChat.add(new ChatMessage(uidRemitente, recibido, System.currentTimeMillis()));
+                                        chatAdapter.notifyItemInserted(mensajesChat.size() - 1);
+                                        recyclerViewChat.scrollToPosition(mensajesChat.size() - 1);
+                                    });
+                                })
+                                .send();
+                    }
+                });
+    }
+
+    private void publicarMensajeMQTT(String uidUsuario, String texto) {
+        if (mqttClient.getState() != MqttClientState.CONNECTED) {
+            Toast.makeText(this, "MQTT no conectado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String topic = "chat/" + uidUsuario + "/" + uidAdmin;
+        mqttClient.publishWith()
+                .topic(topic)
+                .payload(texto.getBytes(StandardCharsets.UTF_8))
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .send()
+                .whenComplete((ack, throwable) -> {
+                    if (throwable == null) {
+                        runOnUiThread(() -> {
+                            mensajesChat.add(new ChatMessage(uidAdmin, texto, System.currentTimeMillis()));
+                            chatAdapter.notifyItemInserted(mensajesChat.size() - 1);
+                            recyclerViewChat.scrollToPosition(mensajesChat.size() - 1);
+                        });
+                    }
+                });
     }
 }

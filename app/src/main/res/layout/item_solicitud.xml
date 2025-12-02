@@ -1,38 +1,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="14dp"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#EEEEEE"
-    android:layout_marginBottom="8dp">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/txtMensajeSolicitud"
+        android:id="@+id/txtUsuario"
+        android:text="Nombre Apellido"
+        android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/txtHoraSolicitud"
-        android:textSize="12sp"
-        android:textColor="#666666"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/txtUsuarioSolicitud"
-        android:textSize="12sp"
-        android:textColor="#444444"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <!-- Botón para seleccionar al usuario -->
-    <Button
-        android:id="@+id/btnSeleccionar"
-        android:text="Seleccionar"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtEmail"
+        android:text="Correo/UID"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:background="@android:drawable/btn_default"/>
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnVerSolicitud"
+            android:text="Ver solicitud"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnResponder"
+            android:text="Responder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>

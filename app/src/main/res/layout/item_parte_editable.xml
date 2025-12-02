@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Nombre del conductor o usuario -->
         <TextView
             android:id="@+id/txtNombre"
             android:text="Nombre"
@@ -19,13 +20,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <!-- Patente del vehículo -->
         <TextView
             android:id="@+id/txtPatente"
             android:text="Patente"
             android:textSize="14sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"/>
 
+        <!-- Botón para editar el parte -->
         <Button
             android:id="@+id/btnEditarParte"
             android:text="Editar Parte"
@@ -33,6 +37,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="@android:color/white"/>
+
+        <!-- Botón para eliminar el parte -->
+        <Button
+            android:id="@+id/btnEliminarParte"
+            android:text="Eliminar Parte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/holo_red_dark"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

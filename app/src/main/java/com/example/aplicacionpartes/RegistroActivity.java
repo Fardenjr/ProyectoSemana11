@@ -11,36 +11,45 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    private EditText edtEmail, edtPassword;
+    private EditText edtNombre, edtApellido, edtCargo, edtCiudad, edtEmail, edtPassword;
     private Button btnRegistrar;
     private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(this); //  Inicializar Firebase
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_registro);
 
         // Enlazar vistas
+        edtNombre = findViewById(R.id.edtNombre);
+        edtApellido = findViewById(R.id.edtApellido);
+        edtCargo = findViewById(R.id.edtCargo);
+        edtCiudad = findViewById(R.id.edtCiudad);
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         btnRegistrar = findViewById(R.id.btnRegistrar);
 
         auth = FirebaseAuth.getInstance();
 
-        // Botón para registrar usuario
         btnRegistrar.setOnClickListener(v -> registrarUsuario());
     }
 
     private void registrarUsuario() {
+        String nombre = edtNombre.getText().toString().trim();
+        String apellido = edtApellido.getText().toString().trim();
+        String cargo = edtCargo.getText().toString().trim();
+        String ciudad = edtCiudad.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
-        //  Validaciones básicas
-        if (email.isEmpty() || password.isEmpty()) {
+        // Validaciones básicas
+        if (nombre.isEmpty() || apellido.isEmpty() || cargo.isEmpty() || ciudad.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -55,12 +64,32 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
-        //  Registrar en Firebase
+        // Registrar en Firebase Authentication
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(result -> {
-                    Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
+                    FirebaseUser user = auth.getCurrentUser();
+                    if (user != null) {
+                        String uid = user.getUid();
+
+                        // Asignar rol por defecto: "usuario"
+                        String rol = "usuario";
+
+                        // Crear objeto Usuario con rol
+                        Usuario nuevoUsuario = new Usuario(uid, nombre, apellido, cargo, ciudad, email, rol);
+
+                        // Guardar en Realtime Database
+                        FirebaseDatabase.getInstance().getReference("usuarios")
+                                .child(uid)
+                                .setValue(nuevoUsuario)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(this, MainActivity.class));
+                                    finish();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, "Error guardando datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                });
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();

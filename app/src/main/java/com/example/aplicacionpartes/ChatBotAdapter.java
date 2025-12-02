@@ -41,16 +41,18 @@ public class ChatBotAdapter extends RecyclerView.Adapter<ChatBotAdapter.ViewHold
         holder.txtHora.setText(hora);
 
         // Estilo según autor
-        if ("bot".equals(mensaje.autor)) {
+        if ("bot".equalsIgnoreCase(mensaje.autor)) {
             holder.txtMensaje.setBackgroundResource(R.drawable.bg_mensaje_bot);
             holder.txtMensaje.setTextColor(ContextCompat.getColor(context, android.R.color.black));
             holder.container.setGravity(Gravity.START);
             holder.labelAutor.setText("Bot");
+            holder.labelAutor.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
         } else {
             holder.txtMensaje.setBackgroundResource(R.drawable.bg_mensaje_usuario);
             holder.txtMensaje.setTextColor(ContextCompat.getColor(context, android.R.color.white));
             holder.container.setGravity(Gravity.END);
             holder.labelAutor.setText("Tú");
+            holder.labelAutor.setTextColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark));
         }
     }
 

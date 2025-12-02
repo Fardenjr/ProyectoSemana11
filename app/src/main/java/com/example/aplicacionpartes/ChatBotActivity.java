@@ -31,6 +31,9 @@ public class ChatBotActivity extends AppCompatActivity {
     private Map<String, String> faq;
     private final Handler handler = new Handler();
 
+    // Estado para saber si estamos esperando datos del usuario para contactar admin
+    private boolean esperandoDatosAdmin = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,12 +79,23 @@ public class ChatBotActivity extends AppCompatActivity {
 
             handler.postDelayed(() -> {
                 String respuesta = obtenerRespuesta(texto);
+
+                // Mensaje de respuesta individual
                 Mensaje mBot = new Mensaje(respuesta, true);
                 pushMensajeFirebase(mBot);
                 mensajes.add(mBot);
                 adapter.notifyItemInserted(mensajes.size() - 1);
                 recyclerView.scrollToPosition(mensajes.size() - 1);
-            }, 5000); // demora de 5 segundos
+
+                // Luego, en otro mensaje, mostrar el menú
+                if (!respuesta.equals(menuOpciones())) {
+                    Mensaje mMenu = new Mensaje("¿Tienes alguna otra consulta?\n" + menuOpciones(), true);
+                    pushMensajeFirebase(mMenu);
+                    mensajes.add(mMenu);
+                    adapter.notifyItemInserted(mensajes.size() - 1);
+                    recyclerView.scrollToPosition(mensajes.size() - 1);
+                }
+            }, 1500);
         });
     }
 
@@ -127,7 +141,6 @@ public class ChatBotActivity extends AppCompatActivity {
         faq.put("7", "Un usuario puede crear partes y ver su historial, pero no editar ni eliminar.");
         faq.put("8", "Un administrador puede crear, editar, eliminar partes y ver todos los historiales.");
         faq.put("9", "Para iniciar sesión, usa tu correo institucional en la pantalla de login.");
-        faq.put("10", "He registrado tu solicitud para contactar con un administrador. Pronto se pondrán en contacto contigo.");
         faq.put("11", "Para cerrar sesión, usa el menú superior y selecciona 'Cerrar sesión'.");
     }
 
@@ -141,12 +154,24 @@ public class ChatBotActivity extends AppCompatActivity {
     private String obtenerRespuesta(String preguntaOriginal) {
         String key = normalizar(preguntaOriginal);
 
-        // Solicitud especial: contactar administrador (opción 10 o frases)
-        if (key.equals("10") || key.contains("contactar administrador") || key.contains("hablar administrador") || key.contains("ayuda directa")) {
-            enviarSolicitudAdministrador(preguntaOriginal);
-            return faq.get("10") + "\n\n¿Tienes alguna otra consulta?\n" + menuOpciones();
+        // Opción especial: contactar administrador
+        if (key.equals("10") || key.contains("contactar administrador") || key.contains("hablar administrador")) {
+            esperandoDatosAdmin = true;
+            return "Okey, contactaremos al administrador/superior.\n" +
+                    "Primero necesitamos que rellenes estos apartados:\n" +
+                    "- Nombre\n- Apellido\n- Cargo\n- Institución a la que perteneces\n- Problema/Solicitud\n\n" +
+                    "Por favor escribe toda la información en un solo mensaje.";
         }
 
+        // Si estamos esperando datos del usuario
+        if (esperandoDatosAdmin) {
+            esperandoDatosAdmin = false;
+            guardarSolicitudAdmin(preguntaOriginal);
+            return "Gracias, tu solicitud ha sido enviada al administrador.\n" +
+                    "Pronto se pondrán en contacto contigo.";
+        }
+
+        // Lógica FAQ normal
         String base = null;
         if (faq.containsKey(key)) base = faq.get(key);
         else if (key.contains("hacer") && key.contains("parte")) base = faq.get("1");
@@ -161,23 +186,23 @@ public class ChatBotActivity extends AppCompatActivity {
         else if (key.contains("cerrar") && key.contains("sesion")) base = faq.get("11");
 
         if (key.equals("menu") || key.equals("0")) {
-            return "Aquí tienes nuevamente las opciones disponibles:\n" + menuOpciones();
+            return menuOpciones();
         }
 
         if (base != null) {
-            return base + "\n\n¿Tienes alguna otra consulta?\n" + menuOpciones();
+            return base;
         }
 
-        return "No tengo esa respuesta aún. Puedes consultar al administrador.\n\n¿Tienes alguna otra consulta?\n" + menuOpciones();
+        return "No tengo esa respuesta aún. Puedes consultar al administrador.";
     }
 
-    private void enviarSolicitudAdministrador(String mensajeUsuario) {
+    private void guardarSolicitudAdmin(String datosUsuario) {
         DatabaseReference adminRef = FirebaseDatabase.getInstance()
                 .getReference("solicitudes_admin")
                 .child(uid);
 
         Map<String, Object> solicitud = new HashMap<>();
-        solicitud.put("mensaje", mensajeUsuario);
+        solicitud.put("datos", datosUsuario);
         solicitud.put("timestamp", System.currentTimeMillis());
 
         adminRef.push().setValue(solicitud);

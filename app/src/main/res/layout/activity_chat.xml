@@ -7,9 +7,10 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
+    <!-- Título del chat -->
     <TextView
         android:id="@+id/tituloChat"
-        android:text="Asistente Partito 🤖"
+        android:text="Chat En Tiempo Real"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
@@ -17,6 +18,22 @@
         android:gravity="center"
         android:paddingBottom="8dp"/>
 
+    <!-- Spinner para seleccionar administrador -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecciona un administrador:"
+        android:textStyle="bold"
+        android:paddingBottom="4dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerAdmins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Lista de mensajes -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChat"
         android:layout_width="match_parent"
@@ -25,7 +42,9 @@
         android:padding="4dp"
         android:scrollbars="vertical"/>
 
+    <!-- Barra de escritura -->
     <LinearLayout
+        android:id="@+id/layoutInput"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +61,8 @@
             android:layout_marginEnd="8dp"
             android:inputType="textMultiLine"
             android:minLines="1"
-            android:maxLines="4"/>
+            android:maxLines="4"
+            android:imeOptions="actionSend"/>
 
         <Button
             android:id="@+id/btnEnviar"
