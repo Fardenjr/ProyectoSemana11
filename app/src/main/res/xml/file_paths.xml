@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Archivos internos de la app -->
+    <files-path name="internal_files" path="." />
+
+    <!-- Caché interna -->
+    <cache-path name="internal_cache" path="." />
+
+    <!-- Caché externa -->
+    <external-cache-path name="external_cache" path="." />
+
+    <!-- Carpeta Pictures en almacenamiento externo -->
+    <external-path name="external_pictures" path="Pictures/" />
+
+    <!-- Carpeta específica dentro de almacenamiento externo -->
+    <external-path name="external_app" path="Android/data/com.example.aplicacionpartes/files/" />
+
+</paths>

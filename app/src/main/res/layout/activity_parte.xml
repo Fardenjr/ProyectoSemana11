@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tituloParte"
+            android:text="Crear Parte"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#37474F"
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Sección: Datos del infractor -->
+        <TextView android:text="Datos del infractor" android:textStyle="bold" android:textColor="#616161"
+            android:layout_marginBottom="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/nombres" android:hint="Nombres" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/apellidos" android:hint="Apellidos" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/rut" android:hint="RUT" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edad" android:hint="Edad" android:inputType="number" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Sección: Vehículo -->
+        <TextView android:text="Datos del vehículo" android:textStyle="bold" android:textColor="#616161"
+            android:layout_marginTop="16dp" android:layout_marginBottom="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <Spinner android:id="@+id/tipoAuto" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <Spinner android:id="@+id/marca" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/modelo" android:hint="Modelo" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/patente" android:hint="Patente" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Sección: Infracción -->
+        <TextView android:text="Infracción" android:textStyle="bold" android:textColor="#616161"
+            android:layout_marginTop="16dp" android:layout_marginBottom="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <Spinner android:id="@+id/causal" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <RadioGroup android:id="@+id/grupoGravedad" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <RadioButton android:id="@+id/rbGravisima" android:text="Gravísima" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbGrave" android:text="Grave" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbLeve" android:text="Leve" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </RadioGroup>
+
+        <!-- Foto -->
+        <ImageView android:id="@+id/fotoVehiculo" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginTop="12dp" android:background="#E0E0E0"/>
+        <Button android:id="@+id/btnFoto" android:text="Tomar Foto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+
+        <!-- Autor -->
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/autorId" android:hint="ID del Autor" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Funcionario -->
+        <TextView android:text="Funcionario" android:textStyle="bold" android:textColor="#616161"
+            android:layout_marginTop="16dp" android:layout_marginBottom="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/nombreFuncionario" android:hint="Nombre Funcionario" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/numeroPlaca" android:hint="Número de Placa" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner android:id="@+id/departamento" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lugarPago" android:hint="Lugar de pago" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón guardar -->
+        <Button
+            android:id="@+id/btnGuardar"
+            android:text="Guardar Parte"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#1976D2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+</ScrollView>

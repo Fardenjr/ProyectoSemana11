@@ -1,0 +1,9 @@
+<!-- res/layout/view_input_respuesta.xml -->
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/editRespuesta"
+    android:hint="Escribe una respuesta…"
+    android:minLines="3"
+    android:gravity="top|start"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>

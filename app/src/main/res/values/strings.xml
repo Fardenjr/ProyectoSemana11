@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AplicacionPartes</string>
+    <string name="actualizar_parte">Actualizar Parte</string>
+    <string name="parte_no_encontrado">Parte no encontrado.</string>
+    <string name="id_no_recibido">ID no recibido.</string>
+    <string name="menu_title_details">Perfil</string>
+    <string name="menu_title_logout">Cerrar sesión</string>
+</resources>

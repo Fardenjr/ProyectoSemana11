@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="6dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <!-- Nombre del usuario -->
+        <TextView
+            android:id="@+id/txtUsuario"
+            android:text="Nombre Apellido"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#37474F"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- UID o correo -->
+        <TextView
+            android:id="@+id/txtEmail"
+            android:text="UID o correo"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Motivo de la solicitud -->
+        <TextView
+            android:id="@+id/txtMotivo"
+            android:text="Motivo de la solicitud"
+            android:textColor="#607D8B"
+            android:textSize="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Botones -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnVerSolicitud"
+                android:text="Ver solicitud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#03A9F4"
+                android:elevation="2dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnResponder"
+                android:text="Responder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#4CAF50"
+                android:elevation="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
